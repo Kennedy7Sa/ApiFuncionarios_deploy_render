@@ -17,9 +17,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//conexão com o banco de dados usando variavel de ambiente para a senha do aiva
+var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? ""; //ESSE DB_PASSWORD VAI VIRAR VARIAVEL DE AMBIENTE NO RENDER 
 //injeção da coneção com o banco de dados 
-builder.Services.AddDbContext<AppDbContexto>(options => options.UseSqlite(builder.Configuration
-    .GetConnectionString("sqlite")));
+builder.Services.AddDbContext<AppDbContexto>(options => options.UseNpgsql(builder.Configuration
+    .GetConnectionString("postgresql").Replace("{{password}}", dbPassword)));
 
 //injeções de dependencia das interfaces funcionario 
 builder.Services.AddScoped<IFuncionarioServiceInterface, FuncionarioService>();
